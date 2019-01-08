@@ -27,18 +27,18 @@ print("Checking for config...")
 try:
     configfile = open("config.txt", "r")
     print("Config found! applying settings right now...")
-    configdata = configfile.readlines
+
 except FileNotFoundError:
     print("No config found! That's no big deal. We'll get one set up, it'll only take a few minutes at most!")
     fullsetup()
 if configdata[7][25] = "T":
     fullsetup()
-
+configdata = configfile.readlines
 resFolder = configdata[1][24:]
 custom = configdata[2][24:]
 visfolder = configdata[3][15:]
 sefolder = configdata[4][15:]
-
+configfile.close
 
 if custom.upper != "NONE":
     custom = custom + "\\"
@@ -49,11 +49,11 @@ if configdata[8][40] = "T":
         if permission[0].upper == "N":
             print("Alrighty, I won't bother you about blockskins anymore - Lemme just update your prefernces really fast...")
             configdata[8] = "Check for Blockskins = F\n"
-
-        
-for size in ["\\small", "\\normal", "\\big"]:
-    if os.path.isdir(custom + "blockskin" + size) == False:
-
+            configfile = open("config.txt" "w+")
+            configfile.write(configdata)
+            configfile.close
+        else:
+            print("Thanks! I'll make sure to add one right away.")
     
 
         #   Checks for any new files in the custom blockskin folder (Only does a check through normal blockskins)
