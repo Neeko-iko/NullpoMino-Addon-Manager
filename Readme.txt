@@ -3,8 +3,6 @@ the NullpoMino Add-on Manager was created due to Add-ons being tedious and hard 
 
 how to use this:
 
-Put your NullpoMino directory on the first line of "Directories.txt" (default is already there incase you haven't moved it)
-if you have your add-ons somewhere else dump the directory to that on the second line (leave blank if you're going to dump them in the same folder)
 
 adding folders to folders:
 When creating a new folder for an Add-On, remember to make the title of the folder all caps and to not have any other folders inside of the ones you create.
@@ -21,3 +19,10 @@ if you're using a custom folder make sure that there is a blockskins folder avai
 
 Dump any blockskin in there and once the program is ran it'll move it into your nullpomino blockskin folder with the correct labelling (it won't check for dupelicates)
 
+
+
+
+Config:
+the config saves whatever preferences you previously set.
+If you decide later on that you want to change them, go ahead.
+do not add any lines to the config file.
