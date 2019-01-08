@@ -44,6 +44,7 @@ if custom.upper != "NONE":
     custom = custom + "\\"
 print("Checking Folders...")
 if configdata[8][40] = "T":
+    print("making sure the folders exist...")
     if os.path.isdir(custom + "blockskin") == False:
         permission = input("There isn't a 'blockskin' folder in your custom directory \n\nwould you mind if I created one? - Y/N \n If you say 'no', I won't ask you again, and I won't check for blockskins on launch. \n\n if you say 'yes' i will create one and check it for blockskins")
         if permission[0].upper == "N":
@@ -54,6 +55,12 @@ if configdata[8][40] = "T":
             configfile.close
         else:
             print("Thanks! I'll make sure to add one right away.")
+    for size in ["\\small", "\\normal", "\\big"]:
+        #check for the blockskin size folders
+        ''
+    if len((fnmatch.filter(os.listdir(custom + "blockskin\\normal"), '*.png'))) == 0:
+        print("No new blockskins found")
+
     
 
         #   Checks for any new files in the custom blockskin folder (Only does a check through normal blockskins)
