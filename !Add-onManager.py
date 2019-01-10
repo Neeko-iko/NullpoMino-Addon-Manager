@@ -124,10 +124,10 @@ if configdata["Check for Blockskins"] == "T":
     for size in sizes:
         consistent.append(True if len((fnmatch.filter(os.listdir(f"{custom}blockskin{size}"), '*.png'))) != 0 else False)
 
-    if True: ###Replace with a check to see if "consistent" is filled with False:
+    if True: ###        Replace with a check to see if "consistent" is filled with False:       ###
         print("No new blockskins were found")
 
-    elif True: ###Replace with a check to see if "consistent" is filled with True:
+    elif True: ###      Replace with a check to see if "consistent" is filled with True:        ###
         print("new blockskins found!")
         
                 #   grabs blockskin count
@@ -144,6 +144,6 @@ if configdata["Check for Blockskins"] == "T":
                 #os.renames(fileName, fileName.replace(skinpath[11], skinpath[11] + str(num)))
 
     else:
-        ###Might want to make another function for the blockskin stuff
+        ###     Might want to make another function for the blockskin stuff	    ###
         print("whopsies")
 # 
