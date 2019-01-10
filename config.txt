@@ -1,9 +1,9 @@
-Directories:
-NullpoMino res Folder: C:\NullpoMino\res
-Custom Add-ons Folder: None
-Visual Folder: Skins
-Sounds Folder: Sound Effects
+#Directories:
+NullpoMino Installation Folder = C:\NullpoMino
+Custom Add-ons Folder = none
+Custom Visuals Folder = none
+Custom Sounds Folder = none
 
-Config:  (F = False | T = True)
+#Config (F = False | T = True)
 Reset on next launch = F
 Check for Blockskins = T
