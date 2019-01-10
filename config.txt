@@ -1,5 +1,5 @@
 #Directories:
-NullpoMino Installation Folder = C:\NullpoMino
+NullpoMino Installation Folder = C:\NullpoMino\res
 Custom Add-ons Folder = none
 Custom Visuals Folder = none
 Custom Sounds Folder = none

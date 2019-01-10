@@ -5,7 +5,7 @@ import re
 SETTINGS = {
     # Dictionary of all settings with their default options, by category
     "Directories" : [
-        ["NullpoMino Installation Folder", "C:\\NullpoMino"],
+        ["NullpoMino Installation Folder", "C:\\NullpoMino\\res"],
         ["Custom Add-ons Folder", "none"],
         ["Custom Visuals Folder", "none"],
         ["Custom Sounds Folder", "none"]
@@ -15,20 +15,30 @@ SETTINGS = {
         ["Check for Blockskins", "T"]
     ]
 }
+sizes = ["\\small", "\\normal", "\\big"]
 
 def fullsetup():
     print("Starting set-up routine...")
     configfile = open("config.txt", "w+")
-    configfile.write("#Directories:\n")
-        #   asks where stuff is
+    configfile.write("#Directories:\n")         #   Opens the config file and Immedietly dumps "Directories" in it
     for directorytype in SETTINGS["Directories"]:
         directory = input(
             "Please enter the full path to your {0}.\n[Enter nothing for the default ({1})] "
-            .format(directorytype[0], "none" if directorytype[1] == "" else directorytype[1])
+            .format(*directorytype)
         )
             #   Checks for if the user says literally nothing
         if directory == "" or directory.upper() == "NOTHING":
             directory = directorytype[1]
+        while not os.path.isdir(directory):
+            if directory == "none":
+                break
+            else:
+                directory = input("\nHey now, no funny business - give me the real directory.\n"
+                "[if you made a mistake and entered a character by accident, enter nothing and it'll set you up with the defaults]\n"
+                "[if you entered nothing and I'm yelling at you, you may not have the default directory - if there is one]\n")
+            if directory == "" or directory.upper() == "NOTHING":
+                directory = directorytype[1]
+
         configfile.write("{0} = {1}\n".format(directorytype[0], directory))
     configfile.write("\n#Config (F = False | T = True)\n")
     for config in SETTINGS["Config (F = False | T = True)"]:
@@ -37,7 +47,7 @@ def fullsetup():
     
 def readconfig():
     configfile = open("config.txt", "r")
-    match = re.findall("(?:([^#\n][^\n]*?)\s+=\s+([^\n]+))", configfile.read())
+    match = re.findall(r"(?:([^#\n][^\n]*?)\s+=\s+([^\n]+))", configfile.read())
     dict = {}
     for key, val in match:
         dict[key] = val
@@ -56,6 +66,10 @@ def writeconfig(config):
     
 # ###############################################################
 
+# Actual code:
+
+
+
 print("Checking for config...")
 try:
     configdata = readconfig()
@@ -66,7 +80,7 @@ except FileNotFoundError:
     fullsetup()
     configdata = readconfig()
 
-print(configdata)
+#print(configdata)
 try:
     if configdata["Reset on next launch"] == "T":
         fullsetup()
@@ -83,44 +97,53 @@ except KeyError:
     visfolder = configdata["Custom Visuals Folder"]
     sefolder = configdata["Custom Sounds Folder"]
 
-if custom.upper() != "NONE":
+if custom.upper() == "NONE":
+    custom = ""
+else:
     custom = custom + "\\"
 print("Checking Folders...")
 if configdata["Check for Blockskins"] == "T":
     if os.path.isdir(custom + "blockskin") == False:
-        permission = input("There isn't a 'blockskin' folder in your custom directory \n\nis it okay if I create one? - Y/N \n If you say 'no', I won't ask you again, and I won't check for blockskins on launch. \n\n if you say 'yes' i will create one and check it for blockskins")
+        permission = input("There isn't a 'blockskin' folder in your custom directory \n\nis it okay if I create one? - Y/N \n" 
+        "If you say 'no', I won't ask you again, and I won't check for blockskins on launch. \n\n if you say 'yes' i will create one and check it for blockskins\n")
+
         if permission[0].upper == "N":
             print("Alrighty, I won't bother you about blockskins anymore - Lemme just update your prefernces really fast...")
             configdata["Check for Blockskins"] = "F"
-            writeconfig()
+            writeconfig(configdata)
         else:
-            print("Thanks! I'll make sure to add one right away.")
-    for size in ["\\small", "\\normal", "\\big"]:
-        #check for the blockskin size folders
+            print("Thanks! I'll make sure to add one right now.")
+            # Create the folder, instead of lie ##
+
+        #   Checks the different sized folders to make sure they exist, if they do, add them
+    for size in ["\\small", "\\normal", "\\big"]: 
         ''
-    if len((fnmatch.filter(os.listdir(custom + "blockskin\\normal"), '*.png'))) == 0:
-        print("No new blockskins found")
 
-    
+        #   Checks for any new files in the custom blockskin folders
+    consistent = []
+    for size in sizes:
+        consistent.append(True if len((fnmatch.filter(os.listdir(f"{custom}blockskin{size}"), '*.png'))) != 0 else False)
 
-        #   Checks for any new files in the custom blockskin folder (Only does a check through normal blockskins)
+    if True: ###Replace with a check to see if "consistent" is filled with False:
+        print("No new blockskins were found")
 
-if len((fnmatch.filter(os.listdir(custom + "blockskin\\normal"), '*.png'))) == 0:
-    print("No new blockskins found")
-else:
-    print("new blockskins found!")
-            #   grabs blockskin count
-    BSkinpath = resFolder + "\\graphics\\blockskin\\normal"
-    NumBSkins = len((fnmatch.filter(os.listdir(BSkinpath), '*.png')))
-    print('Found ' + str(len((fnmatch.filter(os.listdir(custom + "blockskin\\normal"), '*.png')))) + ' blockskins!')
+    elif True: ###Replace with a check to see if "consistent" is filled with True:
+        print("new blockskins found!")
+        
+                #   grabs blockskin count
+        BSkinpath = resFolder + "\\graphics\\blockskin\\normal"
+        NumBSkins = len((fnmatch.filter(os.listdir(BSkinpath), '*.png')))
+        print('Found ' + str(len((fnmatch.filter(os.listdir(custom + "blockskin\\normal"), '*.png')))) + ' blockskins!')
 
-            #   edits the blockskins in their folders to be sequential to what NullpoMino has
-    for size in ["\\small", "\\normal", "\\big"]:
+                #   edits the blockskins in their folders to be sequential to what NullpoMino has
+        for size in ["\\small", "\\normal", "\\big"]:
 
-        print("Editing the "+ size[1:] + " blockskins...")
+            num = NumBSkins
+            skinpath = custom + "blockskin\\" + size
+            #for fileName in os.listdir(skinpath):
+                #os.renames(fileName, fileName.replace(skinpath[11], skinpath[11] + str(num)))
 
-        num = NumBSkins
-        skinpath = custom + "blockskin\\" + size
-        #for fileName in os.listdir(skinpath):
-            #os.renames(fileName, fileName.replace(skinpath[11], skinpath[11] + str(num)))
-        print("Finished Editing the " + size[1:] + " blockskins")
+    else:
+        ###Might want to make another function for the blockskin stuff
+        print("whopsies")
+# 
