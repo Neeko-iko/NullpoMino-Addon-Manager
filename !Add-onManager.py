@@ -17,6 +17,8 @@ SETTINGS = {
 }
 sizes = ["\\small", "\\normal", "\\big"]
 
+##########################   Config Setup stuff   ############################
+
 def fullsetup():
     print("Starting set-up routine...")
     configfile = open("config.txt", "w+")
@@ -64,8 +66,26 @@ def writeconfig(config):
         configfile.write("{0} = {1}\n".format(settingtype[0], config[settingtype[0]]))
     configfile.close()
     
+
 # ###############################################################
 
+# #################  Function to add blockskins  ################
+def BSAdd():
+    
+                #   grabs blockskin count (from the normal blockskins.)
+        BSkinpath = resFolder + "\\graphics\\blockskin\\normal"
+        NumBSkins = len((fnmatch.filter(os.listdir(BSkinpath), '*.png')))
+        print('Found ' + str(len((fnmatch.filter(os.listdir(custom + "blockskin\\normal"), '*.png')))) + ' blockskins!')
+
+                #   edits the blockskins in their folders to be sequential to what NullpoMino has
+        for size in ["\\small", "\\normal", "\\big"]:
+
+            num = NumBSkins
+            skinpath = custom + "blockskin\\" + size
+            #for fileName in os.listdir(skinpath):
+                #os.renames(fileName, fileName.replace(skinpath[11], skinpath[11] + str(num)))
+
+# ##################################################################
 # Actual code:
 
 
@@ -116,34 +136,27 @@ if configdata["Check for Blockskins"] == "T":
             # Create the folder, instead of lie ##
 
         #   Checks the different sized folders to make sure they exist, if they do, add them
-    for size in ["\\small", "\\normal", "\\big"]: 
+    for size in sizes: 
         ''
+        ######## unfinished.
 
         #   Checks for any new files in the custom blockskin folders
     consistent = []
     for size in sizes:
         consistent.append(True if len((fnmatch.filter(os.listdir(f"{custom}blockskin{size}"), '*.png'))) != 0 else False)
 
-    if True: ###        Replace with a check to see if "consistent" is filled with False:       ###
+    if consistent == [False, False, False]:
         print("No new blockskins were found")
 
-    elif True: ###      Replace with a check to see if "consistent" is filled with True:        ###
+    elif consistent == [True, True, True]:
         print("new blockskins found!")
-        
-                #   grabs blockskin count
-        BSkinpath = resFolder + "\\graphics\\blockskin\\normal"
-        NumBSkins = len((fnmatch.filter(os.listdir(BSkinpath), '*.png')))
-        print('Found ' + str(len((fnmatch.filter(os.listdir(custom + "blockskin\\normal"), '*.png')))) + ' blockskins!')
-
-                #   edits the blockskins in their folders to be sequential to what NullpoMino has
-        for size in ["\\small", "\\normal", "\\big"]:
-
-            num = NumBSkins
-            skinpath = custom + "blockskin\\" + size
-            #for fileName in os.listdir(skinpath):
-                #os.renames(fileName, fileName.replace(skinpath[11], skinpath[11] + str(num)))
-
+        BSAdd()
     else:
-        ###     Might want to make another function for the blockskin stuff	    ###
-        print("whopsies")
+        permission = input("You seem to have a mix-up of blockskins..\n"
+        "I can still try and add them for you, but NullpoMino might not be too happy with it\n\n Y/N  ")
+        if permission[0].upper() == "N":
+            print("Aighty! I'll leave them be.")
+        else:
+            print("okay, I'll try, don't blame me if NullpoMino stops working for whatever reason..")
+            BSAdd()
 # 
