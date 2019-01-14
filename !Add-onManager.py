@@ -70,7 +70,7 @@ def writeconfig(config):
 # ###############################################################
 
 # #################  Function to add blockskins  ################
-def BSAdd():
+def BlockskinAdd():
     
                 #   grabs blockskin count (from the normal blockskins.)
         BSkinpath = resFolder + "\\graphics\\blockskin\\normal"
@@ -150,7 +150,7 @@ if configdata["Check for Blockskins"] == "T":
 
     elif consistent == [True, True, True]:
         print("new blockskins found!")
-        BSAdd()
+        BlockskinAdd()
     else:
         permission = input("You seem to have a mix-up of blockskins..\n"
         "I can still try and add them for you, but NullpoMino might not be too happy with it\n\n Y/N  ")
@@ -158,5 +158,5 @@ if configdata["Check for Blockskins"] == "T":
             print("Aighty! I'll leave them be.")
         else:
             print("okay, I'll try, don't blame me if NullpoMino stops working for whatever reason..")
-            BSAdd()
+            BlockskinAdd()
 # 
