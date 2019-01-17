@@ -6,12 +6,12 @@ SETTINGS = {
     # Dictionary of all settings with their default options, by category
     "Directories" : [
         ["NullpoMino Installation Folder", "C:\\NullpoMino\\res"],
-        ["Custom Custom Folder", "none"],
+        ["Custom Blockskins Folder", "Blockskins"],
         ["Custom Visuals Folder", "Skins"],
         ["Custom Sounds Folder", "Sound Effects"]
     ],
     "Config (F = False | T = True)" : [
-        ["Reset on next launch", "F"],
+        ["Reconfigure on next launch", "F"],
         ["Check for Blockskins", "T"]
     ]
 }
@@ -31,15 +31,13 @@ def fullsetup():
             #   Checks for if the user says literally nothing
         if directory == "" or directory.upper() == "NOTHING":
             directory = directorytype[1]
+            os.mkdir(directory)
         while not os.path.isdir(directory):
-            if directory == "none":
-                break
-            else:
-                directory = input("\nHey now, no funny business - give me the real directory.\n"
-                "[if you made a mistake and entered a character by accident, enter nothing and it'll set you up with the defaults]\n"
-                "[if you entered nothing and I'm yelling at you, you may not have the default directory - if there is one]\n")
+            directory = input("\nHey now, no funny business - give me the real directory.\n"
+            "[if you made a mistake and entered a character by accident, enter nothing and it'll set you up with the defaults]\n")
             if directory == "" or directory.upper() == "NOTHING":
                 directory = directorytype[1]
+                os.mkdir(directory)
 
         configfile.write("{0} = {1}\n".format(directorytype[0], directory))
     configfile.write("\n#Config (F = False | T = True)\n")
@@ -101,9 +99,8 @@ except FileNotFoundError:
     fullsetup()
     configdata = readconfig()
 
-#print(configdata)
 try:
-    if configdata["Reset on next launch"] == "T":
+    if configdata["Reconfigure on next launch"] == "T":
         fullsetup()
     resFolder = configdata["NullpoMino Installation Folder"]
     custom = configdata["Custom Add-ons Folder"]
@@ -114,34 +111,21 @@ except KeyError:
     fullsetup()
     configdata = readconfig()
     resFolder = configdata["NullpoMino Installation Folder"]
-    custom = configdata["Custom Add-ons Folder"]
+    blockFolder = configdata["Custom Blockskins Folder"]
     visfolder = configdata["Custom Visuals Folder"]
     sefolder = configdata["Custom Sounds Folder"]
 
-if custom.upper() == "NONE":
-    custom = ""
+if blockFolder.upper() == "NONE":
+    blockFolder = ""
 else:
-    custom = custom + "\\"
+    blockFolder = blockFolder + "\\"
 print("Checking Folders...")
 if configdata["Check for Blockskins"] == "T":
-    if os.path.isdir(custom + "blockskin") == False:
-        permission = input("There isn't a 'blockskin' folder in your custom directory \n\nis it okay if I create one? - Y/N \n" 
-        "If you say 'no', I won't ask you again, and I won't check for blockskins on launch. \n\n if you say 'yes' i will create one and check it for blockskins\n")
-
-        if permission[0].upper == "N":
-            print("Alrighty, I won't bother you about blockskins anymore - Lemme just update your prefernces really fast...")
-            configdata["Check for Blockskins"] = "F"
-            writeconfig(configdata)
-        else:
-            print("Thanks! I'll make sure to add one right now.")
-            # Create the folder, instead of lie ##
-            os.mkdir(custom + "blockskin")
-    
     NullSkinPath = resFolder + "\\graphics\\blockskin"
     NullSkinNum = len(fnmatch.filter(os.listdir(NullSkinPath + "\\normal"), '*.png'))
     print(f"Detected {NullSkinNum} blockskins in NullpoMino folder.")
-    for dir in os.listdir(custom + "blockskin"):
-        workingDir = custom + "blockskin\\" + dir
+    for dir in os.listdir(blockFolder):
+        workingDir = f"{blockFolder}\\{dir}"
         # print(workingDir)
         if os.path.isdir(workingDir):
             consistent = [os.path.exists(f"{workingDir}{s}.png") for s in sizes]
@@ -161,13 +145,19 @@ if configdata["Check for Blockskins"] == "T":
                 print("There seems to be files missing in blockskin {dir}.")
                 permission = ""
                 while permission not in ["Y", "N"]:
-                    permission = input("Do you want to add the blockskin to NullpoMino anyway? (Y/N)").upper()
+                    permission = input("Do you want to add the blockskin to NullpoMino anyway? [Y/N]").upper()
                 if permission == "N":
-                    print("Aighty! I'll leave them be.")
+                    print("Aighty! I'll get rid of it.")
+                    for file in os.listdir(workingDir):
+                        os.remove(f"{workingDir}\\{file}")
+                    os.rmdir(workingDir)
                 else:
                     print("okay, I'll try, don't blame me if NullpoMino stops working for whatever reason..")
                     BlockskinMove(workingDir, NullSkinNum, NullSkinPath)
-                    NullSkinNum += 1
+                    NullSkinNum += 1                    
+                    for file in os.listdir(workingDir):
+                        os.remove(f"{workingDir}\\{file}")
+                    os.rmdir(workingDir)
 # 
 choice = None
 dirSel = None
