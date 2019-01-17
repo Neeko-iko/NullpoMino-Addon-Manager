@@ -1,14 +1,14 @@
 import os
 import fnmatch
 import re
-
+import shutil
 SETTINGS = {
     # Dictionary of all settings with their default options, by category
     "Directories" : [
         ["NullpoMino Installation Folder", "C:\\NullpoMino\\res"],
-        ["Custom Add-ons Folder", "none"],
-        ["Custom Visuals Folder", "none"],
-        ["Custom Sounds Folder", "none"]
+        ["Custom Custom Folder", "none"],
+        ["Custom Visuals Folder", "Skins"],
+        ["Custom Sounds Folder", "Sound Effects"]
     ],
     "Config (F = False | T = True)" : [
         ["Reset on next launch", "F"],
@@ -71,12 +71,22 @@ def writeconfig(config):
 
 # #################  Function to add blockskins  ################
 def BlockskinMove(origin, id, dest):
-
         #   edits the blockskins in their folders to be sequential to what NullpoMino has
-        for size in sizes:
-            os.renames(origin+size+".png", dest+size+size[0:2]+str(id)+".png")
+    for size in sizes:
+        os.renames(origin+size+".png", dest+size+size[0:2]+str(id)+".png")
 
 # ##################################################################
+
+def resourceMove(origin, dest):
+    print(origin)
+    itemList = os.listdir(origin)
+    for file in itemList:
+        if os.path.exists(f"{dest}\\{file}"):
+            os.remove(f"{dest}\\{file}")
+        shutil.copy2(f"{origin}\\{file}", f"{dest}\\{file}")
+
+
+
 # Actual code:
 
 
@@ -126,25 +136,7 @@ if configdata["Check for Blockskins"] == "T":
             print("Thanks! I'll make sure to add one right now.")
             # Create the folder, instead of lie ##
             os.mkdir(custom + "blockskin")
-    """
-        #   Checks the different sized folders to make sure they exist, if they do, add them
-    for size in sizes:
-        if not os.path.isdir(f"{custom}blockskin{size}"):
-            os.mkdir(f"{custom}blockskin{size}")
-
-        #   Checks for any new files in the custom blockskin folders
-        
-    consistent = []
-    for size in sizes:
-        consistent.append(True if len((fnmatch.filter(os.listdir(f"{custom}blockskin{size}"), '*.png'))) != 0 else False)
-
-    if consistent == [False, False, False]:
-        print("No new blockskins were found")
-
-    elif consistent == [True, True, True]:
-        print("new blockskins found!")
-        BlockskinAdd()
-        """
+    
     NullSkinPath = resFolder + "\\graphics\\blockskin"
     NullSkinNum = len(fnmatch.filter(os.listdir(NullSkinPath + "\\normal"), '*.png'))
     print(f"Detected {NullSkinNum} blockskins in NullpoMino folder.")
@@ -177,3 +169,21 @@ if configdata["Check for Blockskins"] == "T":
                     BlockskinMove(workingDir, NullSkinNum, NullSkinPath)
                     NullSkinNum += 1
 # 
+choice = None
+dirSel = None
+while choice not in ["Y", "N"]:
+    choice = input("Do you want to move visuals? [Y/N] \n\n").upper()
+if choice == "Y":
+    resList = os.listdir(visfolder)
+    while dirSel not in resList:
+        dirSel = input("Please select a skintype\n\n" + ", ".join(resList) + "\n\n")
+    resourceMove(f"{visfolder}\\{dirSel}", f"{resFolder}\\graphics")
+choice = None
+dirSel = None
+while choice not in ["Y", "N"]:
+    choice = input("Do you want to move sounds? [Y/N] \n\n").upper()
+if choice == "Y":
+    resList = os.listdir(sefolder)
+    while dirSel not in resList:
+        dirSel = input("Please select a skintype\n\n" + ", ".join(resList) + "\n\n")
+    resourceMove(f"{sefolder}\\{dirSel}", f"{resFolder}\\se")
