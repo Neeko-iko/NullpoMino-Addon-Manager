@@ -31,13 +31,19 @@ def fullsetup():
             #   Checks for if the user says literally nothing
         if directory == "" or directory.upper() == "NOTHING":
             directory = directorytype[1]
-            os.mkdir(directory)
+            try:
+                os.mkdir(directory)
+            except FileExistsError:
+                ''
         while not os.path.isdir(directory):
             directory = input("\nHey now, no funny business - give me the real directory.\n"
             "[if you made a mistake and entered a character by accident, enter nothing and it'll set you up with the defaults]\n")
             if directory == "" or directory.upper() == "NOTHING":
                 directory = directorytype[1]
-                os.mkdir(directory)
+                try:
+                    os.mkdir(directory)
+                except FileExistsError:
+                    ''
 
         configfile.write("{0} = {1}\n".format(directorytype[0], directory))
     configfile.write("\n#Config (F = False | T = True)\n")
