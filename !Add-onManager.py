@@ -109,7 +109,7 @@ try:
     if configdata["Reconfigure on next launch"] == "T":
         fullsetup()
     resFolder = configdata["NullpoMino Installation Folder"]
-    custom = configdata["Custom Add-ons Folder"]
+    blockFolder = configdata["Custom Blockskins Folder"]
     visfolder = configdata["Custom Visuals Folder"]
     sefolder = configdata["Custom Sounds Folder"]
 except KeyError:
