@@ -92,6 +92,11 @@ def resourceMove(origin, dest):
             os.remove(f"{dest}\\{file}")
         shutil.copy2(f"{origin}\\{file}", f"{dest}\\{file}")
 
+def resourceArch(origin, output):
+    shutil.make_archive(output, 'zip', origin)
+    removelist = os.listdir(origin)
+    for file in removelist:
+        os.remove(f"{origin}\\{file}")
 
 
 # Actual code:
@@ -117,6 +122,7 @@ try:
     sefolder = configdata["Custom Sounds Folder"]
     fontfolder = configdata["Custom Font Folder"]
     experimental = configdata["Use DEV [experimental] features"]
+    nullFolder = configdata["NullpoMino Installation Folder"]
 except KeyError:
     print("The config file seems corrupted. Let's fix this by going through the set up again.")
     fullsetup()
@@ -127,6 +133,7 @@ except KeyError:
     sefolder = configdata["Custom Sounds Folder"]
     fontfolder = configdata["Custom Font Folder"]
     experimental = configdata["Use DEV [experimental] features"]
+    nullFolder = configdata["NullpoMino Installation Folder"]
 
 
 
@@ -164,7 +171,7 @@ if configdata["Check for Blockskins"] == "T":
                 permission = ""
                 while permission not in ["Y", "N"]:
                     permission = input("Do you want to add the blockskin to NullpoMino anyway? [Y/N]").upper()
-                if permission == "N":
+                if permission.upper() == "N":
                     print("Aighty! I'll get rid of it.")
                     for file in os.listdir(workingDir):
                         os.remove(f"{workingDir}\\{file}")
@@ -185,25 +192,28 @@ if experimental.upper() == "T":
     "but that doesn't mean you can't use it if you want to\n"
     "just... don't expect everything to be super stable - if it crashes, let Neeko#3370 know on discord, thanks!\n")
     while selection != "":
+        permission = "why are you reading variable initilizations??????????"
         choice = None
         dirSel = None
         selection = input("Enter what you'd like to do! \n\n"
-        "Move Visuals(V), Sounds(S), or Font(F) \n\nArchive Replays(R) or Netplay Chat Logs(L) into a ZIP [WILL DELETE THE ONES YOU CHOOSE FROM YOUR NULLPOMINO FOLDER]\n\n")
+        "Move Visuals(V), Sounds(S), or Fonts(F) \n\n"
+        "Archive Replays(R) or Netplay Chat Logs(L) into a ZIP \n(will be located in the same folder as the script.) \n"
+        "[WILL DELETE THE FILES YOU SELECT FROM YOUR NULLPOMINO FOLDER]\n\n").upper()
 
 
-        if selection[0].upper() == "V":
+        if selection[0] == "V":
             resList = os.listdir(visfolder)
             while dirSel not in resList:
                 dirSel = input("Please select a skintype\n\n" + ", ".join(resList) + "\n\n")
             resourceMove(f"{visfolder}\\{dirSel}", f"{resFolder}\\graphics")
 
-        if selection[0].upper() == "S":
+        elif selection[0] == "S":
             resList = os.listdir(sefolder)
             while dirSel not in resList:
                 dirSel = input("Please select a soundpack\n\n" + ", ".join(resList) + "\n\n")
             resourceMove(f"{sefolder}\\{dirSel}", f"{resFolder}\\se")
         
-        if selection[0].upper() == "F":
+        elif selection[0] == "F":
             resList = os.listdir(fontfolder)
             while dirSel not in resList:
                 dirSel = input("Please select a font \n[you don't need to write the .ttf]\n\n" + ", ".join(resList) + "\n\n")
@@ -211,7 +221,24 @@ if experimental.upper() == "T":
                     dirSel = dirSel + ".ttf"
             os.remove(f"{resFolder}\\font\\font.ttf")
             shutil.copy2(f"{fontfolder}\\{dirSel}", f"{resFolder}\\font\\font.ttf")
-                
+
+
+        elif selection[0] == "R":
+            while permission != "Y" and permission != "N":
+                permission = input("Are you sure you want to archive your replays? (Y/N) \n [REMINDER: IT WILL REMOVE THE ONES IN YOUR NULLPOMINO FOLDER.] \n\n").upper()
+            if permission == "Y":
+                print("Alrighty!")
+                resourceArch(f"{nullFolder}\\replay", "replyArchive [MOVE BEFORE MAKING ANOTHER]")
+
+        elif selection[0] == "L":
+            while permission != "Y" and permission != "N":
+                permission = input("Are you sure you want to archive your Netplay Chat Logs? (Y/N) \n [REMINDER: IT WILL REMOVE THE ONES IN YOUR NULLPOMINO FOLDER.] \n\n").upper()
+            if permission == "Y":
+                print("Alrighty!")
+                resourceArch(f"{nullFolder}\\log", "logArchive [MOVE BEFORE MAKING ANOTHER]")
+        else:
+            print("That's not an option, silly!")
+
             
 
 
