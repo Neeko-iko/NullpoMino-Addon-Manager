@@ -19,7 +19,6 @@ SETTINGS = {
     ]
 }
 sizes = ["\\small", "\\normal", "\\big"]
-
 ##########################   Config Setup stuff   ############################
 
 def fullsetup():
@@ -152,10 +151,11 @@ if configdata["Check for Blockskins"] == "T":
     NullSkinNum = len(fnmatch.filter(os.listdir(NullSkinPath + "\\normal"), '*.png'))
     print(f"Detected {NullSkinNum} blockskins in NullpoMino folder.")
     for dir in os.listdir(blockFolder):
-        workingDir = f"{blockFolder}\\{dir}"
-        # print(workingDir)
+        workingDir = f"{blockFolder}{dir}"
+        print(workingDir)
         if os.path.isdir(workingDir):
             consistent = [os.path.exists(f"{workingDir}{s}.png") for s in sizes]
+            print(consistent)
             if consistent == [True, True, True]:
                 print(f"Adding blockskin {dir}.")
                 BlockskinMove(workingDir, NullSkinNum, NullSkinPath)
@@ -246,6 +246,7 @@ while selection != "":
 #                   "[WILL DELETE THE FILES YOU SELECT FROM YOUR NULLPOMINO FOLDER]\n\n"
     elif selection[0] == "E":
         while True:
+            permission = None
             selection = input("Archive Replays(R), Netplay Chat Logs(L) or Screenshots(S) into a ZIP\n"
             "\n(will be located in the same folder as the script.) \n"
             "[WILL DELETE THE FILES YOU SELECT FROM YOUR NULLPOMINO FOLDER]\n\n"
