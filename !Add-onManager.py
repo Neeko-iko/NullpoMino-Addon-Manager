@@ -2,6 +2,9 @@ import os
 import fnmatch
 import re
 import shutil
+import tkinter
+from tkinter import *
+import random
 SETTINGS = {
     # Dictionary of all settings with their default options, by category
     "Directories" : [
@@ -15,7 +18,9 @@ SETTINGS = {
     "Config (F = False | T = True)" : [
         ["Reconfigure on next launch", "F"],
         ["Check for Blockskins", "T"],
-        ["Delete Logs and Replays without archiving", "F"]
+        ["Delete Logs and Replays without archiving", "F"],
+        ["GUI (Can be: (V)Dark, Light, or None)", "Dark"],
+        ["Random Icons & Titles upon startup", "T"]
     ]
 }
 sizes = ["\\small", "\\normal", "\\big"]
@@ -124,6 +129,7 @@ try:
     fontfolder = configdata["Custom Font Folder"]
     importfolder = configdata["Custom Imports Folder"]
     nullFolder = configdata["NullpoMino Installation Folder"]
+    GUI = configdata["GUI (Can be: (V)Dark, Light, or None)"]
 except KeyError:
     print("The config file seems corrupted. Let's fix this by going through the set up again.")
     fullsetup()
@@ -135,7 +141,7 @@ except KeyError:
     fontfolder = configdata["Custom Font Folder"]
     importfolder = configdata["Custom Imports Folder"]
     nullFolder = configdata["NullpoMino Installation Folder"]
-
+    GUI = configdata["GUI (Can be: (V)Dark, Light, or None)"]
 
 
 
@@ -186,101 +192,141 @@ if configdata["Check for Blockskins"] == "T":
                         os.remove(f"{workingDir}\\{file}")
                     os.rmdir(workingDir)
 # 
-#Code and user interface
-selection = None
+#Code and Classic User Interface
+#
+# The Classic User Interace uses the console to communcate to the user.
+#
+# Unlike the Newer GUI, which allows the user to click stuff to do things, it makes it more user friendly c:
 
-print("You seem to have downloaded the 'Master Branch' off of github\n"
-"And that's fine! but if something breaks, or you have any ideas for what to add - please contact Neeko#3370")
-while selection != "":
-    selection = input("Would you like to \nMove things?[MOVE] \nArchive things?[EXTRACT]\n\n").upper()
-    selection = selection + " "
-    if selection[0] == "M":
-        while True:
-            choice = None
-            dirSel = None
-            selection = input("Enter what you'd like to do! [Type anything other than what is listed to go back!]\n\n"
-                "Move Visuals(V), Sounds(S), or Fonts(F) Import .ruls/.reps(I) from the Imports folder\n\n").upper()
-            selection = selection + " "
-            
-            if selection[0] == "V":
-                resList = os.listdir(visfolder)
-                while dirSel not in resList:
-                    dirSel = input("Please select a skintype\n\n" + ", ".join(resList) + "\n\n")
-                resourceMove(f"{visfolder}\\{dirSel}", f"{resFolder}\\graphics")
+#  You're Welcome! - Neeky Weeky
 
-            elif selection[0] == "S":
-                resList = os.listdir(sefolder)
-                while dirSel not in resList:
-                    dirSel = input("Please select a soundpack\n\n" + ", ".join(resList) + "\n\n")
-                resourceMove(f"{sefolder}\\{dirSel}", f"{resFolder}\\se")
-            
-            elif selection[0] == "F":
-                resList = os.listdir(fontfolder)
-                while dirSel not in resList:
-                    dirSel = input("Please select a font \n[you don't need to write the .ttf]\n\n" + ", ".join(resList) + "\n\n")
-                    if dirSel[-4:] != ".ttf":
-                        dirSel = dirSel + ".ttf"
-                os.remove(f"{resFolder}\\font\\font.ttf")
-                shutil.copy2(f"{fontfolder}\\{dirSel}", f"{resFolder}\\font\\font.ttf")
-            
-            elif selection[0] == "I":
-                itemList = os.listdir(importfolder)
-                if len(itemList) == 0:
-                    print("There's nothing in here!!!")
+if GUI == None:
+    selection = None
+
+    print("You seem to have downloaded the 'Master Branch' off of github\n"
+    "And that's fine! but if something breaks, or you have any ideas for what to add - please contact Neeko#3370")
+    while selection != "":
+        selection = input("Would you like to \nMove things?[MOVE] \nArchive things?[EXTRACT]\n\n").upper()
+        selection = selection + " "
+        if selection[0] == "M":
+            while True:
+                choice = None
+                dirSel = None
+                selection = input("Enter what you'd like to do! [Type anything other than what is listed to go back!]\n\n"
+                    "Move Visuals(V), Sounds(S), or Fonts(F) Import .ruls/.reps(I) from the Imports folder\n\n").upper()
+                selection = selection + " "
+                
+                if selection[0] == "V":
+                    resList = os.listdir(visfolder)
+                    while dirSel not in resList:
+                        dirSel = input("Please select a skintype\n\n" + ", ".join(resList) + "\n\n")
+                    resourceMove(f"{visfolder}\\{dirSel}", f"{resFolder}\\graphics")
+
+                elif selection[0] == "S":
+                    resList = os.listdir(sefolder)
+                    while dirSel not in resList:
+                        dirSel = input("Please select a soundpack\n\n" + ", ".join(resList) + "\n\n")
+                    resourceMove(f"{sefolder}\\{dirSel}", f"{resFolder}\\se")
+                
+                elif selection[0] == "F":
+                    resList = os.listdir(fontfolder)
+                    while dirSel not in resList:
+                        dirSel = input("Please select a font \n[you don't need to write the .ttf]\n\n" + ", ".join(resList) + "\n\n")
+                        if dirSel[-4:] != ".ttf":
+                            dirSel = dirSel + ".ttf"
+                    os.remove(f"{resFolder}\\font\\font.ttf")
+                    shutil.copy2(f"{fontfolder}\\{dirSel}", f"{resFolder}\\font\\font.ttf")
+                
+                elif selection[0] == "I":
+                    itemList = os.listdir(importfolder)
+                    if len(itemList) == 0:
+                        print("There's nothing in here!!!")
+                    else:
+                        print("OwO there's stuff in here lemme add it all really quickly")
+                        for file in itemList:
+                            if file[-4:] == ".rul":
+                                shutil.copy2(f"{importfolder}\\{file}", f"{nullFolder}\\config\\rule")
+                                print("added a .rul (rule file)")
+                            if file[-4:] == ".rep":
+                                shutil.copy2(f"{importfolder}\\{file}", f"{nullFolder}\\replay")
+                                print("added a .rep (replay file)")
+                            os.remove(f"{importfolder}\\{file}")
+
                 else:
-                    print("OwO there's stuff in here lemme add it all really quickly")
-                    for file in itemList:
-                        if file[-4:] == ".rul":
-                            shutil.copy2(f"{importfolder}\\{file}", f"{nullFolder}\\config\\rule")
-                            print("added a .rul (rule file)")
-                        if file[-4:] == ".rep":
-                            shutil.copy2(f"{importfolder}\\{file}", f"{nullFolder}\\replay")
-                            print("added a .rep (replay file)")
-                        os.remove(f"{importfolder}\\{file}")
+                    print("That's not an option!\nGoing back!")
+                    break
 
-            else:
-                print("That's not an option!\nGoing back!")
-                break
+    #"Archive Replays(R), Netplay Chat Logs(L) or Screenshots(P) into a ZIP \n(will be located in the same folder as the script.) \n"
+    #                   "[WILL DELETE THE FILES YOU SELECT FROM YOUR NULLPOMINO FOLDER]\n\n"
+        elif selection[0] == "E":
+            while True:
+                permission = None
+                selection = input("Archive Replays(R), Netplay Chat Logs(L) or Screenshots(S) into a ZIP\n"
+                "\n(will be located in the same folder as the script.) \n"
+                "[WILL DELETE THE FILES YOU SELECT FROM YOUR NULLPOMINO FOLDER]\n\n"
+                "Extract .ruls(E) into a ZIP[WON'T DELETE CURRENT ONES] \nEnter anything apart from this and you'll go back!\n\n").upper()
+                selection = selection + " "
 
-#"Archive Replays(R), Netplay Chat Logs(L) or Screenshots(P) into a ZIP \n(will be located in the same folder as the script.) \n"
-#                   "[WILL DELETE THE FILES YOU SELECT FROM YOUR NULLPOMINO FOLDER]\n\n"
-    elif selection[0] == "E":
-        while True:
-            permission = None
-            selection = input("Archive Replays(R), Netplay Chat Logs(L) or Screenshots(S) into a ZIP\n"
-            "\n(will be located in the same folder as the script.) \n"
-            "[WILL DELETE THE FILES YOU SELECT FROM YOUR NULLPOMINO FOLDER]\n\n"
-            "Extract .ruls(E) into a ZIP[WON'T DELETE CURRENT ONES] \nEnter anything apart from this and you'll go back!\n\n").upper()
-            selection = selection + " "
+                if selection[0] == "R":
+                    while permission != "Y" and permission != "N":
+                        permission = input("Are you sure you want to archive your replays? (Y/N) \n [REMINDER: IT WILL REMOVE THE ONES IN YOUR NULLPOMINO FOLDER.] \n\n").upper()
+                    if permission == "Y":
+                        print("Alrighty!")
+                        resourceArch(f"{nullFolder}\\replay", "replyArchive [MOVE BEFORE MAKING ANOTHER]")
 
-            if selection[0] == "R":
-                while permission != "Y" and permission != "N":
-                    permission = input("Are you sure you want to archive your replays? (Y/N) \n [REMINDER: IT WILL REMOVE THE ONES IN YOUR NULLPOMINO FOLDER.] \n\n").upper()
-                if permission == "Y":
-                    print("Alrighty!")
-                    resourceArch(f"{nullFolder}\\replay", "replyArchive [MOVE BEFORE MAKING ANOTHER]")
+                elif selection[0] == "L":
+                    while permission != "Y" and permission != "N":
+                        permission = input("Are you sure you want to archive your Netplay Chat Logs? (Y/N) \n [REMINDER: IT WILL REMOVE THE ONES IN YOUR NULLPOMINO FOLDER.] \n\n").upper()
+                    if permission == "Y":
+                        print("Alrighty!")
+                        resourceArch(f"{nullFolder}\\log", "logArchive [MOVE BEFORE MAKING ANOTHER]")
 
-            elif selection[0] == "L":
-                while permission != "Y" and permission != "N":
-                    permission = input("Are you sure you want to archive your Netplay Chat Logs? (Y/N) \n [REMINDER: IT WILL REMOVE THE ONES IN YOUR NULLPOMINO FOLDER.] \n\n").upper()
-                if permission == "Y":
-                    print("Alrighty!")
-                    resourceArch(f"{nullFolder}\\log", "logArchive [MOVE BEFORE MAKING ANOTHER]")
-
-            elif selection[0] == "S":
-                while permission != "Y" and permission != "N":
-                    permission = input("Are you sure you want to archive your Screenshots? (Y/N) \n [REMINDER: IT WILL REMOVE THE ONES IN YOUR NULLPOMINO FOLDER.] \n\n").upper()
-                if permission == "Y":
-                    print("Alrighty!")
-                    resourceArch(f"{nullFolder}\\ss", "SShotArchive [MOVE BEFORE MAKING ANOTHER]")
-            
-            elif selection[0] == "E":
-                shutil.make_archive("Rules", 'zip', f"{nullFolder}\\config\\rule")
-                print("okay done! it will be located where the script is located!")
-            else:
-                print("you goose! that's not an option! Back we goooooooooo!!!")
-                break
+                elif selection[0] == "S":
+                    while permission != "Y" and permission != "N":
+                        permission = input("Are you sure you want to archive your Screenshots? (Y/N) \n [REMINDER: IT WILL REMOVE THE ONES IN YOUR NULLPOMINO FOLDER.] \n\n").upper()
+                    if permission == "Y":
+                        print("Alrighty!")
+                        resourceArch(f"{nullFolder}\\ss", "SShotArchive [MOVE BEFORE MAKING ANOTHER]")
+                
+                elif selection[0] == "E":
+                    shutil.make_archive("Rules", 'zip', f"{nullFolder}\\config\\rule")
+                    print("okay done! it will be located where the script is located!")
+                else:
+                    print("you goose! that's not an option! Back we goooooooooo!!!")
+                    break
 
 
+        else:
+            print("That's not an option, silly!")
+
+else:
+    if GUI == "Dark":
+        bgcolor = "Gray"
+        textcolor = "White"
+    elif GUI == "VDark":
+        bgcolor = "Black"
+        textcolor = "White"
     else:
-        print("That's not an option, silly!")
+        bgcolor = "White"
+        textcolor = "Black"
+    root = Tk()
+    if configdata["Random Icons & Titles upon startup"] == "T":
+        root.iconbitmap("./!Manager GUI/icons/icon" +str(random.randint(1,len(os.listdir("./!Manager GUI/icons")))) + ".ico")
+        windowtitle = open("./!Manager GUI/WindowTitles.txt", "r")
+        titlelist = windowtitle.readlines()
+        windowtitle.close()
+        windowtitle = titlelist[random.randint(0, (len(titlelist)-1))]
+        #if "\n" in windowtitle:
+        #    windowtitle.strip(-1)
+        root.title("NMAOM: " +windowtitle)
+    else:
+        root.iconbitmap("./!Manager GUI/icons/icon4")
+        root.title("NullpoMino Add-on Manager")
+
+        
+    root.minsize(500, 400)
+    root.configure(bg = bgcolor)
+
+
+
+    root.mainloop()
