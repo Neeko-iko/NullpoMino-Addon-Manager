@@ -3,6 +3,7 @@ import fnmatch
 import re
 import shutil
 import tkinter
+from tkinter import ttk
 from tkinter import *
 import random
 SETTINGS = {
@@ -200,10 +201,12 @@ if configdata["Check for Blockskins"] == "T":
 
 #  You're Welcome! - Neeky Weeky
 
-if GUI == None:
+if GUI == "None" and GUI != "VDark" and GUI != "Dark" and GUI != "Light":
     selection = None
 
-    print("You seem to have downloaded the 'Master Branch' off of github\n"
+    print("OwO A fiesty one aren't we? Disabling the GUI so that you can use a command console like a NERD!\n"
+    "That's okay, we like nerds!\n"
+    "Also you seem to have downloaded the 'Master Branch' off of github\n"
     "And that's fine! but if something breaks, or you have any ideas for what to add - please contact Neeko#3370")
     while selection != "":
         selection = input("Would you like to \nMove things?[MOVE] \nArchive things?[EXTRACT]\n\n").upper()
@@ -303,12 +306,15 @@ else:
     if GUI == "Dark":
         bgcolor = "Gray"
         textcolor = "White"
+        menucolor = "Black"
     elif GUI == "VDark":
         bgcolor = "Black"
         textcolor = "White"
+        menucolor = "Gray"
     else:
         bgcolor = "White"
         textcolor = "Black"
+        menucolor = "Light Gray"
     root = Tk()
     if configdata["Random Icons & Titles upon startup"] == "T":
         root.iconbitmap("./!Manager GUI/icons/icon" +str(random.randint(1,len(os.listdir("./!Manager GUI/icons")))) + ".ico")
@@ -323,9 +329,42 @@ else:
         root.iconbitmap("./!Manager GUI/icons/icon4")
         root.title("NullpoMino Add-on Manager")
 
-        
+    tabs = ttk.Notebook(root)
+    visual = ttk.Frame(tabs)
+
+    visualtext = Text(visual, fg = textcolor)
+    visualtext.insert(INSERT, "visualtext test")
+    visualtext.pack(expand = 1, fill = 'both')
+
+
+
+
+    sound = ttk.Frame(tabs)
+    soundtext = Text(sound)
+    soundtext.insert(INSERT, "soundtext test")
+    soundtext.pack(expand = 1, fill = 'both')
+
+
+
+    font = ttk.Frame(tabs)
+    fonttext = Text(font)
+    fonttext.insert(INSERT, "fonttext test")
+    fonttext.pack(expand = 1, fill = 'both')
+
+
+    visual.pack(side = LEFT)
+    sound.pack(side = LEFT)
+    font.pack(side = LEFT )
+
+
+    tabs.add(visual, text = "visuals")
+    tabs.add(sound, text = "sounds")
+    tabs.add(font, text = "fonts")
+    
+
+    tabs.pack(expand =1, fill = 'both')
     root.minsize(500, 400)
-    root.configure(bg = bgcolor)
+    root.configure(bg=bgcolor)
 
 
 
