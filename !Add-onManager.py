@@ -3,8 +3,8 @@ import fnmatch
 import re
 import shutil
 import tkinter
-from tkinter import ttk
 from tkinter import *
+from tkinter import ttk
 import random
 SETTINGS = {
     # Dictionary of all settings with their default options, by category
@@ -316,6 +316,8 @@ else:
         textcolor = "Black"
         menucolor = "Light Gray"
     root = Tk()
+    root.minsize(500, 400)
+    root.configure(bg=bgcolor)
     if configdata["Random Icons & Titles upon startup"] == "T":
         root.iconbitmap("./!Manager GUI/icons/icon" +str(random.randint(1,len(os.listdir("./!Manager GUI/icons")))) + ".ico")
         windowtitle = open("./!Manager GUI/WindowTitles.txt", "r")
@@ -328,43 +330,23 @@ else:
     else:
         root.iconbitmap("./!Manager GUI/icons/icon4")
         root.title("NullpoMino Add-on Manager")
+    ### Actual Gui Code & functions
 
-    tabs = ttk.Notebook(root)
-    visual = ttk.Frame(tabs)
+    framestyle = ttk.Style()
+    framestyle.configure("style", background = bgcolor)
 
-    visualtext = Text(visual, fg = textcolor)
-    visualtext.insert(INSERT, "visualtext test")
-    visualtext.pack(expand = 1, fill = 'both')
+    menutabs = ttk.Notebook(root)
 
-
-
-
-    sound = ttk.Frame(tabs)
-    soundtext = Text(sound)
-    soundtext.insert(INSERT, "soundtext test")
-    soundtext.pack(expand = 1, fill = 'both')
-
-
-
-    font = ttk.Frame(tabs)
-    fonttext = Text(font)
-    fonttext.insert(INSERT, "fonttext test")
-    fonttext.pack(expand = 1, fill = 'both')
-
-
-    visual.pack(side = LEFT)
-    sound.pack(side = LEFT)
-    font.pack(side = LEFT )
-
-
-    tabs.add(visual, text = "visuals")
-    tabs.add(sound, text = "sounds")
-    tabs.add(font, text = "fonts")
+    visual = ttk.Frame(menutabs, style = "style")
+    visual.configure(bg = bgcolor)
     
+    visualText = Text(visual, fg = textcolor)
+    visualText.insert(INSERT, "Visual Text Test")
+    visualText.pack(side = TOP)
+    
+    menutabs.add(visual, text = "Visuals")
+    menutabs.pack()
 
-    tabs.pack(expand =1, fill = 'both')
-    root.minsize(500, 400)
-    root.configure(bg=bgcolor)
 
 
 
