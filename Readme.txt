@@ -8,14 +8,24 @@ if you decide you want to add a skin or sound pack, just dump it into the folder
 
 Blockskins:
 
-Blockskins will be checked for upon launch, if some are found, they will be moved to your NullpoMino directory.
+Blockskins are weird as heck and don't really work as intended.  Once we can figure them out we'll update this.
+For right now don't worry about blockskins
+
+Imports:
+Imports are if you want to dump something like a rule or replay file into your nullpomino folder without having to go through the hassle of opening a bunch of folders.
+It will not be checked upon launch.  This means that you can dump stuff into it after you launch the program.
+
+Fonts:
+Fonts are the .TFFs that NullpoMino uses.
+They act very similar to Visuals and Sound effects - just without extranous folders.
 
 
-[WARNING: ONCE THEY ARE MOVED, THEY WILL BE DELETED TO PREVENT DUPLICATION]
 
-If none are found they will be ignored.
+EXTRACTS:
 
-(won't check for duplicates)
+Extractions just pull from the designated place in the NullpoMino folder and send them to a ZIP in the same folder the script is in.
+
+You can force the script to just straight up delete them in the config if you just want it to clean your folders out for you.
 
 
 Config: 
